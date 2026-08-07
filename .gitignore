@@ -11,5 +11,6 @@ images/
 *.bak
 *.bak.*
 
-# Vendored dependency
-csv/proj4php/
+# Data-gathering scratch tools (Overpass queries, OSGB36 conversion) and
+# their vendored proj4php dependency — not part of the live site
+csv/
