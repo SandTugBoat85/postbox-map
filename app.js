@@ -1,4 +1,4 @@
-// Version 4.1
+// Version 4.1.1
 let map;
 document.addEventListener("DOMContentLoaded", function () {
   map = L.map("map").setView([51.7520, -1.2577], 10);
@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       map.addLayer(markerClusterGroup);
     } else {
-      markerClusterGroup.eachLayer((layer) => {
-        map.addLayer(layer);
-      });
       map.removeLayer(markerClusterGroup);
+      markersArray.forEach((marker) => {
+        map.addLayer(marker);
+      });
     }
   }
 });
@@ -108,4 +108,3 @@ document.getElementById("search-form").addEventListener("submit", (event) => {
     searchPostcode(postcode);
   }
 });
-

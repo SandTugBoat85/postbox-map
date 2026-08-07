@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Kevin Wiblin's Postbox Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="title" content="Kevin Wiblin's Postbox Map">
+    <meta name="description" content="A map of postboxes that have been bagged by Kevin Wiblin">
+    <link rel="icon" href="icons/postbox-pin-red.svg" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <!-- Facebook and Twitter integration -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kevin Wiblin's Postbox Map" />
+    <meta property="og:image" content="//cdn.wiblin.net/postboxes/images/500w/IMG_7310.jpeg" />
+    <meta property="og:url" content="https://www.wiblin.me.uk/" />
+    <meta property="og:site_name" content="Kevin Wiblin's Postbox Map" />
+    <meta property="og:description" content="A map of postboxes that have been bagged by Kevin Wiblin" />
+    <meta name="twitter:title" content="Kevin Wiblin's Postbox Map" />
+    <meta name="twitter:image" content="//cdn.wiblin.net/postboxes/images/500w/IMG_7310.jpeg" />
+    <meta name="twitter:url" content="https://www.wiblin.uk/postboxes/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:description" content="A map of postboxes that have been bagged by Kevin Wiblin" />
+    <meta name="twitter:site" content="@KevinWiblin">
+    <meta name="twitter:creator" content="@KevinWiblin">
+    <link rel="canonical" href="https://www.wiblin.uk/postboxes/" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #search-form {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+        }
+
+        #search-input {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="search-form" autocomplete="off">
+        <input type="text" id="search-input" placeholder="Enter postcode" />
+        <button type="submit">Search</button>
+    </form>
+    <div id="map"><button id="toggle-clustering" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000;">Toggle Clustering</button></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

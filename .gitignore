@@ -1,0 +1,15 @@
+# Local credentials
+config.php
+
+# Photos are served from cdn.wiblin.net, not from this repo
+images/
+
+# Database dumps
+*.sql
+
+# Editor backups and superseded script versions
+*.bak
+*.bak.*
+
+# Vendored dependency
+csv/proj4php/
