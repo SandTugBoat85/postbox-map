@@ -1,0 +1,485 @@
+:root {
+  /* Accents taken from the map pins */
+  --pillar-red: #da202a;
+  --pillar-red-dark: #b31a22;
+  --bagged-green: #589f28;
+
+  --surface: #ffffff;
+  --surface-muted: #f5f6f8;
+  --border: #e2e5ea;
+  --text: #16181c;
+  --text-muted: #5f646d;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px rgba(16, 18, 22, 0.08), 0 2px 10px rgba(16, 18, 22, 0.08);
+  --shadow-lg: 0 12px 24px -8px rgba(16, 18, 22, 0.22), 0 4px 8px -4px rgba(16, 18, 22, 0.12);
+  --ring: 0 0 0 3px rgba(218, 32, 42, 0.25);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* avoids the mobile browser chrome clipping the map */
+}
+
+/* ---------------------------------------------------------------- search */
+
+.search {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1200;
+  width: min(340px, calc(100vw - 24px));
+  margin: 0;
+}
+
+.search__field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 6px 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.search__field:focus-within {
+  border-color: var(--pillar-red);
+  box-shadow: var(--shadow-sm), var(--ring);
+}
+
+.search__icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+}
+
+.search__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+
+.search__input::placeholder {
+  color: var(--text-muted);
+}
+
+/* the native one sits awkwardly next to our own clear button */
+.search__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search__clear {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.search__clear:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.search__clear svg {
+  width: 15px;
+  height: 15px;
+}
+
+.search__go {
+  display: grid;
+  flex: none;
+  place-items: center;
+  min-width: 62px;
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pillar-red);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.search__go:hover {
+  background: var(--pillar-red-dark);
+}
+
+.search__go:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* label and spinner share a cell so the button never changes width */
+.search__go > * {
+  grid-area: 1 / 1;
+}
+
+.search__spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.search[data-busy="false"] .search__spinner,
+.search[data-busy="true"] .search__go-label {
+  visibility: hidden;
+}
+
+.search__status {
+  margin: 8px 0 0;
+  padding: 9px 13px;
+  border-left: 3px solid var(--text-muted);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.search__status[data-tone="error"] {
+  border-left-color: var(--pillar-red);
+  color: var(--pillar-red-dark);
+}
+
+.search__status[data-tone="success"] {
+  border-left-color: var(--bagged-green);
+  color: var(--text);
+}
+
+/* -------------------------------------------------------------- settings */
+
+.settings-button {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.settings-button:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+.settings-button svg {
+  width: 21px;
+  height: 21px;
+  transition: transform 0.4s ease;
+}
+
+.settings-button:hover svg {
+  transform: rotate(60deg);
+}
+
+/* ----------------------------------------------------------------- modal */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 18, 22, 0.45);
+  animation: fade 0.18s ease;
+}
+
+@supports (backdrop-filter: blur(3px)) {
+  .modal__backdrop {
+    backdrop-filter: blur(3px);
+  }
+}
+
+.modal__panel {
+  position: relative;
+  width: min(420px, 100%);
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  animation: rise 0.2s ease;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 12px 20px;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.modal__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modal__close:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.modal__close svg {
+  width: 17px;
+  height: 17px;
+}
+
+.modal__body {
+  padding: 4px 20px 8px;
+}
+
+.modal__footer {
+  margin-top: 8px;
+  padding: 13px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-muted);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.modal__footer b {
+  color: var(--text);
+  font-weight: 650;
+}
+
+/* --------------------------------------------------------------- setting */
+
+.setting {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.setting__label {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.setting__hint {
+  margin: 3px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.switch {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 26px;
+  margin-top: 2px;
+}
+
+.switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.switch__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #ccd0d7;
+  pointer-events: none;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 18, 22, 0.3);
+  transition: transform 0.18s ease;
+}
+
+.switch input:checked + .switch__track {
+  background: var(--pillar-red);
+}
+
+.switch input:checked + .switch__track::after {
+  transform: translateX(18px);
+}
+
+.switch input:focus-visible + .switch__track {
+  box-shadow: var(--ring);
+}
+
+/* ---------------------------------------------------------------- shared */
+
+:where(button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--pillar-red);
+  outline-offset: 2px;
+}
+
+.search__field:focus-within .search__input:focus-visible {
+  outline: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+/* Leaflet's own chrome, nudged to match */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-sm);
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.leaflet-popup-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.leaflet-popup-content p {
+  margin: 0;
+}
+
+.leaflet-popup-content a {
+  color: var(--pillar-red-dark);
+}
+
+.leaflet-control-zoom a {
+  color: var(--text);
+}
+
+@media (max-width: 520px) {
+  .search {
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
+  .modal__panel {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

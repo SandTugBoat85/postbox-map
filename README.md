@@ -20,8 +20,9 @@ Deliberately plain — no build step, no package manager, no framework.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Page shell, styles, postcode search form, clustering toggle |
-| `app.js` | Map setup, marker rendering, popups, postcode search |
+| `index.html` | Page shell, search field, settings cog and modal |
+| `styles.css` | All styling: controls, modal, and Leaflet overrides |
+| `app.js` | Map setup, marker rendering, popups, search, settings |
 | `get_markers.php` | The only endpoint the frontend calls; returns markers as JSON |
 | `config.example.php` | Template for database credentials |
 | `schema.sql` | Table definition and a couple of example rows |
@@ -82,9 +83,19 @@ red pin is currently unreachable. The `markers` table does hold unvisited
 locations — they simply are not published. Dropping the `WHERE` clause would
 put them on the map in red.
 
-The **Toggle Clustering** button switches between clustered and individual
-markers. The search box geocodes a UK postcode through
-[postcodes.io](https://postcodes.io/) and recentres the map.
+## Controls
+
+The **cog** in the bottom-right corner opens a settings dialog. It closes on
+Escape or a backdrop click, traps Tab within itself while open, and returns
+focus to the cog afterwards. It currently holds one setting — whether markers
+are grouped into clusters — which is remembered in `localStorage` under
+`postboxes:cluster` and applied before the first render.
+
+The **search field** geocodes a UK postcode through
+[postcodes.io](https://postcodes.io/) and recentres the map at zoom 16. It
+shows a spinner while the request is in flight and reports the outcome inline
+beneath the field through an `aria-live` region, rather than in a blocking
+`alert()`.
 
 ## Where the data came from
 
