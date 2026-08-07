@@ -10,6 +10,11 @@ images/
 # Editor backups and superseded script versions
 *.bak
 *.bak.*
+app2.js
+app3.js
+
+# Unused Overpass experiment (telephone boxes, not postboxes)
+get_phones.php
 
 # Data-gathering scratch tools (Overpass queries, OSGB36 conversion) and
 # their vendored proj4php dependency — not part of the live site
