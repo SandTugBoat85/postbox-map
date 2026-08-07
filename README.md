@@ -113,10 +113,10 @@ cannot, relicense the underlying location data:
 
 ## Known rough edges
 
-- Popup content is built by string concatenation in `app.js` and interpolates
-  database fields without escaping. Low risk while the data is single-author,
-  but `creditname` and `ref` go into the DOM raw.
 - Leaflet is pinned to 1.7.1 from a CDN with no integrity hash.
+- `get_markers.php` returns the whole table on every request. Fine at a few
+  hundred markers; it would want paging or bounding-box filtering well before
+  a few thousand.
 
 ## License
 

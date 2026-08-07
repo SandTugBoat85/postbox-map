@@ -1,5 +1,70 @@
-// Version 4.1.1
+// Version 4.2
 let map;
+
+const IMAGE_BASE = "//cdn.wiblin.net/postboxes/images/500w/";
+
+// Only http(s) links are allowed out of the credit field. crediturl is stored
+// without a scheme ("twitter.com/KevinWiblin"), so it is resolved against the
+// current page as a protocol-relative URL.
+function creditLinkHref(crediturl) {
+  try {
+    const url = new URL(`//${crediturl}`, window.location.href);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.href : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+// Popups are assembled from DOM nodes rather than concatenated HTML, so
+// database values are always inserted as text and can never become markup.
+function buildPopup(marker) {
+  const popup = document.createElement("div");
+
+  if (marker.image_url) {
+    const image = document.createElement("img");
+    image.src = IMAGE_BASE + encodeURIComponent(marker.image_url);
+    image.width = 200;
+    image.alt = marker.ref ? `Image of ${marker.ref}` : "Image of a postbox";
+    popup.appendChild(image);
+  }
+
+  const details = document.createElement("p");
+
+  const addField = (label, value) => {
+    const name = document.createElement("b");
+    name.textContent = `${label}:`;
+    details.appendChild(name);
+    details.appendChild(document.createTextNode(` ${value}`));
+    details.appendChild(document.createElement("br"));
+  };
+
+  if (marker.ref) {
+    addField("Ref", marker.ref);
+  }
+  if (marker.date) {
+    addField("Date", marker.date);
+  }
+
+  const creditHref = marker.crediturl ? creditLinkHref(marker.crediturl) : null;
+  if (creditHref && marker.creditname) {
+    const name = document.createElement("b");
+    name.textContent = "Credit:";
+    details.appendChild(name);
+
+    const link = document.createElement("a");
+    link.href = creditHref;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = marker.creditname;
+
+    details.appendChild(document.createTextNode(" "));
+    details.appendChild(link);
+  }
+
+  popup.appendChild(details);
+
+  return popup;
+}
 document.addEventListener("DOMContentLoaded", function () {
   map = L.map("map").setView([51.7520, -1.2577], 10);
 
@@ -31,21 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
       markers.forEach((marker) => {
         const latLng = L.latLng(marker.latitude, marker.longitude);
 
-        let popupContent = "";
-        if (marker.image_url) {
-          popupContent += `<img src="//cdn.wiblin.net/postboxes/images/500w/${marker.image_url}" width="200" alt="Image of ${marker.ref}" />`;
-        }
-        popupContent += "<p>";
-        if (marker.ref) {
-          popupContent += `<b>Ref:</b> ${marker.ref}<br>`;
-        }
-        if (marker.date) {
-          popupContent += `<b>Date:</b> ${marker.date}<br>`;
-        }
-        if (marker.crediturl && marker.creditname) {
-          popupContent += `<b>Credit:<b/> <a href="//${marker.crediturl}" target="_blank">${marker.creditname}</a>`;
-        }
-        popupContent += "</p>";
+        const popupContent = buildPopup(marker);
 
         const markerIcon = marker.date ? greenMarkerIcon : redMarkerIcon;
         const clusteredMarker = L.marker(latLng, { icon: markerIcon }).bindPopup(popupContent);
