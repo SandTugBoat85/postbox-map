@@ -4,8 +4,9 @@ config.php
 # Photos are served from cdn.wiblin.net, not from this repo
 images/
 
-# Database dumps
+# Database dumps (but keep the example schema)
 *.sql
+!schema.sql
 
 # Editor backups and superseded script versions
 *.bak
