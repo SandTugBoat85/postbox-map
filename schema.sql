@@ -40,10 +40,10 @@ CREATE TABLE `markers` (
 -- Example rows.
 --
 -- The first is a bagged box: it has a date and a photo, so app.js renders it
--- with the green pin and the popup shows the image and credit.
+-- with the red pin and the popup shows the image and credit.
 --
 -- The second is a known but unvisited location: no date, no photo. app.js has
--- a red pin for this case, though get_markers.php does not currently return
+-- a green pin for this case, though get_markers.php does not currently return
 -- such rows -- see README.md.
 
 INSERT INTO `markers`

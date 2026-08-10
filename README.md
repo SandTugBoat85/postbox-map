@@ -73,15 +73,16 @@ MySQL should listen on `127.0.0.1` only; nothing here needs it exposed.
 `get_markers.php` returns every row as JSON. `app.js` draws each one into a
 marker cluster group and picks the pin colour from whether the row has a date:
 
-- **Green** — bagged. Has a `date`, and usually an `image_url`.
-- **Red** — a known location that has not been visited yet.
+- **Red** — bagged. Has a `date`, and usually an `image_url`. Pillar-box red,
+  to match the thing being mapped.
+- **Green** — a known location that has not been visited yet.
 
 **A quirk worth knowing:** the query in `get_markers.php` filters on
 `WHERE date > '1970-01-01'`, so rows without a date never reach the browser.
-Every marker the map receives therefore has a date and renders green, and the
-red pin is currently unreachable. The `markers` table does hold unvisited
+Every marker the map receives therefore has a date and renders red, and the
+green pin is currently unreachable. The `markers` table does hold unvisited
 locations — they simply are not published. Dropping the `WHERE` clause would
-put them on the map in red.
+put them on the map in green.
 
 ## Controls
 

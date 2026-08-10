@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const popupContent = buildPopup(marker);
 
-        const markerIcon = marker.date ? greenMarkerIcon : redMarkerIcon;
+        const markerIcon = marker.date ? redMarkerIcon : greenMarkerIcon;
         const clusteredMarker = L.marker(latLng, { icon: markerIcon }).bindPopup(popupContent);
 
         markersArray.push(clusteredMarker);
