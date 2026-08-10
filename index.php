@@ -1,12 +1,35 @@
+<?php
+$configPath = __DIR__ . '/config.php';
+$config = is_readable($configPath) ? require $configPath : [];
+
+$site = ($config['site'] ?? []) + [
+    'title'        => 'Postbox Map',
+    'description'  => 'A map of postboxes',
+    'url'          => '',
+    'image_base'   => '',
+    'social_image' => '',
+    'twitter'      => '',
+];
+$mapStart = ($config['map'] ?? []) + ['lat' => 51.7520, 'lng' => -1.2577, 'zoom' => 10];
+
+// Everything interpolated into the markup goes through this.
+$e = fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+
+// Handed to app.js. The HEX flags stop any value closing the script element.
+$clientConfig = json_encode(
+    ['imageBase' => $site['image_base'], 'map' => $mapStart],
+    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES
+);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Kevin Wiblin's Postbox Map</title>
+    <title><?= $e($site['title']) ?></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Kevin Wiblin's Postbox Map">
-    <meta name="description" content="A map of postboxes that have been bagged by Kevin Wiblin">
+    <meta name="title" content="<?= $e($site['title']) ?>">
+    <meta name="description" content="<?= $e($site['description']) ?>">
     <link rel="icon" href="icons/postbox-pin-red.svg" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
@@ -14,21 +37,24 @@
 
     <!-- Facebook and Twitter integration -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Kevin Wiblin's Postbox Map" />
-    <meta property="og:image" content="//cdn.wiblin.net/postboxes/images/500w/IMG_7310.jpeg" />
-    <meta property="og:url" content="https://www.wiblin.me.uk/" />
-    <meta property="og:site_name" content="Kevin Wiblin's Postbox Map" />
-    <meta property="og:description" content="A map of postboxes that have been bagged by Kevin Wiblin" />
-    <meta name="twitter:title" content="Kevin Wiblin's Postbox Map" />
-    <meta name="twitter:image" content="//cdn.wiblin.net/postboxes/images/500w/IMG_7310.jpeg" />
-    <meta name="twitter:url" content="https://www.wiblin.uk/postboxes/" />
+    <meta property="og:title" content="<?= $e($site['title']) ?>" />
+    <meta property="og:image" content="<?= $e($site['social_image']) ?>" />
+    <meta property="og:url" content="<?= $e($site['url']) ?>" />
+    <meta property="og:site_name" content="<?= $e($site['title']) ?>" />
+    <meta property="og:description" content="<?= $e($site['description']) ?>" />
+<?php if ($site['twitter'] !== ''): ?>
+    <meta name="twitter:title" content="<?= $e($site['title']) ?>" />
+    <meta name="twitter:image" content="<?= $e($site['social_image']) ?>" />
+    <meta name="twitter:url" content="<?= $e($site['url']) ?>" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:description" content="A map of postboxes that have been bagged by Kevin Wiblin" />
-    <meta name="twitter:site" content="@KevinWiblin">
-    <meta name="twitter:creator" content="@KevinWiblin">
-    <link rel="canonical" href="https://www.wiblin.uk/postboxes/" />
+    <meta name="twitter:description" content="<?= $e($site['description']) ?>" />
+    <meta name="twitter:site" content="<?= $e($site['twitter']) ?>">
+    <meta name="twitter:creator" content="<?= $e($site['twitter']) ?>">
+<?php endif; ?>
+    <link rel="canonical" href="<?= $e($site['url']) ?>" />
     <meta name="theme-color" content="#da202a" />
     <link rel="stylesheet" href="styles.css" />
+    <script>window.POSTBOX_CONFIG = <?= $clientConfig ?>;</script>
 </head>
 
 <body>

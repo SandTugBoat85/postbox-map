@@ -22,18 +22,18 @@ Deliberately plain — no build step, no package manager, no framework.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Page shell, search field, settings cog and modal |
+| `index.php` | Page shell, search field, settings cog and modal; renders its own meta tags from the config |
 | `styles.css` | All styling: controls, modal, and Leaflet overrides |
 | `app.js` | Map setup, marker rendering, popups, search, settings |
 | `get_markers.php` | The only endpoint the frontend calls; returns markers as JSON |
-| `config.example.php` | Template for database credentials |
+| `config.example.php` | Template for the config: credentials, URLs, map start |
 | `schema.sql` | Table definition and a couple of example rows |
 | `icons/` | Red and green map pins |
 | `screenshots/` | Interface screenshots used in this README |
 
 Not tracked in git, but present in a working deployment:
 
-- `config.php` — real credentials, created from `config.example.php`
+- `config.php` — real settings, created from `config.example.php`
 - `images/` — local copies of the photographs (the site loads them from the CDN)
 - `csv/` — scratch tooling used to gather postbox locations, described below
 
@@ -55,7 +55,7 @@ Not tracked in git, but present in a working deployment:
    GRANT SELECT, INSERT, UPDATE, DELETE ON image_map_db.* TO 'image_map_user'@'localhost';
    ```
 
-3. Copy the config template and fill in the same credentials:
+3. Copy the config template and fill it in:
 
    ```sh
    cp config.example.php config.php
@@ -70,6 +70,30 @@ Not tracked in git, but present in a working deployment:
 4. Serve the directory with PHP available. There is nothing to build.
 
 MySQL should listen on `127.0.0.1` only; nothing here needs it exposed.
+
+## Configuration
+
+`config.php` is the single place the site is described. Nothing else hardcodes
+a URL, a credential or a starting position.
+
+| Key | Used for |
+| --- | --- |
+| `db.*` | Credentials for `get_markers.php` |
+| `site.title` | `<title>`, `og:title`, `og:site_name` |
+| `site.description` | Meta description and both social cards |
+| `site.url` | `<link rel="canonical">`, `og:url`, `twitter:url` |
+| `site.image_base` | Prefix for marker photographs; the `image_url` column holds only a filename |
+| `site.social_image` | The single image used for link previews |
+| `site.twitter` | Handle for the Twitter card. Leave empty to omit those tags entirely |
+| `map.lat` / `map.lng` / `map.zoom` | Where the map opens before the user moves it |
+
+`index.php` renders the head from these values and passes `image_base` and the
+map start to the browser as `window.POSTBOX_CONFIG`. Everything interpolated
+into the markup is escaped, and the JSON is encoded with the `JSON_HEX_*` flags
+so no value can close the script element early.
+
+`app.js` falls back to sensible defaults if that global is absent, so it still
+runs if loaded from a page that does not set it.
 
 ## How markers work
 

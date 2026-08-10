@@ -1,7 +1,11 @@
-// Version 4.3
+// Version 4.4
 let map;
 
-const IMAGE_BASE = "//cdn.wiblin.net/postboxes/images/500w/";
+// index.php injects these from config.php. The fallbacks keep the script
+// working if it is ever loaded from a page that does not set them.
+const CONFIG = window.POSTBOX_CONFIG || {};
+const IMAGE_BASE = CONFIG.imageBase || "//cdn.wiblin.net/postboxes/images/500w/";
+const MAP_START = Object.assign({ lat: 51.752, lng: -1.2577, zoom: 10 }, CONFIG.map || {});
 const CLUSTER_PREFERENCE_KEY = "postboxes:cluster";
 
 // localStorage throws in Safari private browsing and wherever storage is
@@ -86,7 +90,7 @@ function buildPopup(marker) {
   return popup;
 }
 document.addEventListener("DOMContentLoaded", function () {
-  map = L.map("map").setView([51.7520, -1.2577], 10);
+  map = L.map("map").setView([MAP_START.lat, MAP_START.lng], MAP_START.zoom);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
