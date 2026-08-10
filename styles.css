@@ -111,6 +111,11 @@ body {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
+/* display:grid above would otherwise beat the UA stylesheet's [hidden] rule */
+.search__clear[hidden] {
+  display: none;
+}
+
 .search__clear:hover {
   background: var(--surface-muted);
   color: var(--text);
