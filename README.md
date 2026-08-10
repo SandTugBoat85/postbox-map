@@ -6,6 +6,8 @@ A Leaflet map of UK postboxes that have been visited and photographed
 Each marker is a postbox. Clicking one opens a popup with the photograph, the
 Royal Mail box reference, the date it was bagged, and a credit link.
 
+![Clustered postboxes across Oxfordshire, with the postcode search field and settings cog](screenshots/overview.jpg)
+
 ## Stack
 
 Deliberately plain — no build step, no package manager, no framework.
@@ -27,6 +29,7 @@ Deliberately plain — no build step, no package manager, no framework.
 | `config.example.php` | Template for database credentials |
 | `schema.sql` | Table definition and a couple of example rows |
 | `icons/` | Red and green map pins |
+| `screenshots/` | Interface screenshots used in this README |
 
 Not tracked in git, but present in a working deployment:
 
@@ -97,6 +100,19 @@ The **search field** geocodes a UK postcode through
 shows a spinner while the request is in flight and reports the outcome inline
 beneath the field through an `aria-live` region, rather than in a blocking
 `alert()`.
+
+## Screenshots
+
+More of the interface, in `screenshots/`:
+
+| | |
+| --- | --- |
+| [![Individual markers](screenshots/markers.jpg)](screenshots/markers.jpg) | [![Marker popup](screenshots/popup.jpg)](screenshots/popup.jpg) |
+| Individual pins once clusters break apart | A popup with photo, reference, date and credit |
+| [![Settings dialog](screenshots/settings.jpg)](screenshots/settings.jpg) | [![Postcode search](screenshots/search.jpg)](screenshots/search.jpg) |
+| The settings dialog behind the cog | A postcode search and its inline result |
+
+<img src="screenshots/mobile.jpg" alt="The map on a narrow screen" width="300"> <img src="screenshots/mobile-settings.jpg" alt="The settings dialog on a narrow screen" width="300">
 
 ## Where the data came from
 
