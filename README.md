@@ -1,7 +1,7 @@
 # Postbox Map
 
 A Leaflet map of UK postboxes that have been visited and photographed
-("bagged"). Live at <https://www.wiblin.uk/postboxes/>.
+("bagged"). Live at <https://postboxes.wiblin.uk/>.
 
 Each marker is a postbox. Clicking one opens a popup with the photograph, the
 Royal Mail box reference, the date it was bagged, and a credit link.
